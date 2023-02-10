@@ -1,3 +1,8 @@
+/*
+ * @Author: 卢天宇
+ * @Date: 2023-02-10 20:51:50
+ * @Description: 
+ */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 // import App from './App'
@@ -48,6 +53,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     {/* <App /> */}
-    <RouterProvider router={router} errorElement={<div>失败了</div>} />
+    <RouterProvider router={router} />
   </React.StrictMode>,
 )

@@ -3,4 +3,4 @@
 
 echo "Running"
 echo $0
-# npx commitlint --edit
+npx commitlint -e
