@@ -1,4 +1,4 @@
-import { Form, useLoaderData, redirect } from "react-router-dom";
+import { Form, useLoaderData, redirect, useNavigate } from "react-router-dom";
 import { updateContact } from "../contact";
 
 export async function action({ request, params }) {
@@ -11,8 +11,14 @@ export async function action({ request, params }) {
   return redirect(`/contacts/${params.contactId}`);
 }
 
-export default function EditContact() {
+export default function EditContact(args) {
   const contact = useLoaderData();
+
+  let navigate = useNavigate();
+
+  function goBack() {
+    navigate(-1)
+  }
 
   return (
     <Form method="post" id="contact-form">
@@ -62,7 +68,7 @@ export default function EditContact() {
       </label>
       <p>
         <button type="submit">Save</button>
-        <button type="button">Cancel</button>
+        <button type="button" onClick={goBack}>Cancel</button>
       </p>
     </Form>
   );
