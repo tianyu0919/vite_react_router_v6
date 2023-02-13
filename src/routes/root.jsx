@@ -1,11 +1,20 @@
-import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation } from 'react-router-dom';
+import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation, useSubmit } from 'react-router-dom';
 import { getContacts, createContact } from '../contact';
+import React, { useEffect } from 'react';
 
 export default function Root() {
   const navigation = useNavigation();
   const data = useLoaderData();
-  const { contacts } = data;
-  console.log(navigation);
+  const { contacts, q } = data;
+  const submit = useSubmit();
+
+  const searching = navigation.location && new URLSearchParams(navigation.location.search).has(q);
+  console.log(navigation.location);
+  console.log(new URLSearchParams(navigation.location && navigation.location.search))
+
+  useEffect(() => {
+    document.getElementById('q').value = q;
+  }, [q]);
 
   return (
     <>
@@ -15,15 +24,23 @@ export default function Root() {
           <form id="search-form" role="search">
             <input
               id="q"
+              className={searching ? 'loading' : ''}
               aria-label="Search contacts"
               placeholder="Search"
               type="search"
               name="q"
+              defaultValue={q}
+              onChange={(event) => {
+                const isFirstSearch = q === null;
+                submit(event.currentTarget.form, {
+                  replace: !isFirstSearch
+                });
+              }}
             />
             <div
               id="search-spinner"
               aria-hidden
-              hidden={true}
+              hidden={!searching}
             />
             <div
               className="sr-only"
@@ -73,10 +90,13 @@ export default function Root() {
 
 // * 获取用户
 // * loader 当一进入页面的时候就会执行，返回值将是 useLoaderData 的数据
-export async function loader(...args) {
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  console.log(url);
+  const q = url.searchParams.get('q');
   // console.log(args);
-  const contacts = await getContacts();
-  return { contacts };
+  const contacts = await getContacts(q);
+  return { contacts, q };
 }
 
 // * 创建用户

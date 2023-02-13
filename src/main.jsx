@@ -8,7 +8,8 @@ import ReactDOM from 'react-dom/client'
 // import App from './App'
 import ErrorPage from './error-pages';
 import Contact, {
-  loader as contactLoader
+  loader as contactLoader,
+  action as contactAction
 } from './routes/concat';
 
 import Root, {
@@ -24,7 +25,12 @@ import {
 import EditContact, {
   action as editAction
 } from "./routes/edit";
-import './index.css'
+
+import { action as destroyAction } from "./routes/destroy";
+
+import Index from './routes/index';
+
+import './index.css';
 
 const router = createBrowserRouter([
   {
@@ -36,15 +42,29 @@ const router = createBrowserRouter([
     loader: rootLoader, // * 一进来就会调用loader
     children: [
       {
-        path: "/contacts/:contactId",
-        element: <Contact />,
-        loader: contactLoader
-      },
-      {
-        path: "/contacts/:contactId/edit",
-        element: <EditContact />,
-        loader: contactLoader,
-        action: editAction,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true, element: <Index />
+          },
+          {
+            path: "contacts/:contactId/destroy",
+            action: destroyAction,
+            errorElement: <div>Oops! There was an error.</div>
+          },
+          {
+            path: "/contacts/:contactId",
+            element: <Contact />,
+            loader: contactLoader,
+            action: contactAction
+          },
+          {
+            path: "/contacts/:contactId/edit",
+            element: <EditContact />,
+            loader: contactLoader,
+            action: editAction,
+          }
+        ]
       }
     ]
   },
