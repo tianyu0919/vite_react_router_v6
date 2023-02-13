@@ -6,7 +6,7 @@ export async function loader({params}) {
   if(!contact) {
     throw new Response("", {
       status: 404,
-      statusText: "Not Found"
+      statusText: "Not Found 页面没找到"
     })
   }
 
